@@ -1,9 +1,14 @@
+.perltidyrc
 Build.PL
 Changes
+ignore.txt
 lib/Mojo/Cloudstack.pm
 MANIFEST			This list of files
 README
 t/00-load.t
+t/api_key
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
+t/secret_key
+xt/boilerplate.t
