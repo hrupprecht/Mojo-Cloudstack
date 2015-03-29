@@ -1,7 +1,6 @@
 package Mojo::Cloudstack;
 
 use Mojo::Base -base;
-use Mojo::Util 'slurp';
 use Digest::HMAC_SHA1 qw(hmac_sha1 hmac_sha1_hex);
 use MIME::Base64;
 use URI::Encode 'uri_encode';
@@ -15,22 +14,7 @@ has 'secret_key'  => "";
 
 our $VERSION = '0.01';
 
-sub api_key {
-  my ($self, $key) = @_;
-  return $self->_api_key unless $key;
-  $self->_api_key($key);
-}
-
-sub secret_key
-{
-  my ($self, $key) = @_;
-  return $self->_secret_key unless $key;
-  ($key = slurp($key)) =~ s/\n$//;
-  $self->_secret_key($key);
-}
-
-sub _build_request
-{
+sub _build_request {
   my ($self, $params, $response) = @_;
   $response //=  'json';
   my $baseurl = sprintf ("%s://%s:%s%s?", $self->scheme, $self->host, $self->port, $self->path);

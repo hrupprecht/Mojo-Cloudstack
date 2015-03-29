@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::More 'no_plan';
 use Mojo::UserAgent;
+use Mojo::Util 'slurp';
 use Data::Dumper 'Dumper';
 use Test::Exception;
 
@@ -11,13 +12,18 @@ BEGIN {
 
 diag("Testing Mojo::Cloudstack $Mojo::Cloudstack::VERSION, Perl $], $^X");
 
+my $api_key = slurp("t/api_key");
+chomp $api_key;
+my $secret_key = slurp("t/secret_key");
+chomp $secret_key;
+
 my $cs = Mojo::Cloudstack->new(
   host       => "localhost",
   path       => "/client/api",
   port       => "8080",
   scheme     => "http",
-  api_key    => slurp("t/api_key") =~ s/\n$//;
-  secret_key => slurp("t/secret_key") =~ s/\n$//;
+  api_key    => $api_key,
+  secret_key => $secret_key,
   ua         => sub { Mojo::UserAgent->new },
 );
 
