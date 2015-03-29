@@ -16,14 +16,10 @@ my $cs = Mojo::Cloudstack->new(
   path       => "/client/api",
   port       => "8080",
   scheme     => "http",
+  api_key    => slurp("t/api_key") =~ s/\n$//;
+  secret_key => slurp("t/secret_key") =~ s/\n$//;
   ua         => sub { Mojo::UserAgent->new },
 );
-
-dies_ok { $cs->api_key('doesnotexist') } 'file does not exist';
-ok $cs->api_key('t/api_key');
-
-dies_ok { $cs->secret_key('doesnotexist') } 'file does not exist';
-ok $cs->secret_key('t/secret_key');
 
 my $params = Mojo::Parameters->new('command=listUsers&response=json');
 $params->append(apiKey => $cs->api_key);

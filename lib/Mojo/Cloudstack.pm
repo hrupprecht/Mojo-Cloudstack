@@ -10,15 +10,14 @@ has 'host'        => "localhost";
 has 'path'        => "/client/api";
 has 'port'        => "8080";
 has 'scheme'      => "https";
-has '_api_key'    => "AAAAAAAAAAAAAAAAAAA";
-has '_secret_key' => "AAAAAAAAAAAAAAAAAAA";
+has 'api_key'     => "";
+has 'secret_key'  => "";
 
 our $VERSION = '0.01';
 
 sub api_key {
   my ($self, $key) = @_;
   return $self->_api_key unless $key;
-  ($key = slurp($key)) =~ s/\n$//;
   $self->_api_key($key);
 }
 
