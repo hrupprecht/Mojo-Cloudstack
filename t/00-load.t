@@ -46,7 +46,6 @@ my $cs = Mojo::Cloudstack->new(
   scheme     => "http",
   api_key    => $api_key,
   secret_key => $secret_key,
-  ua         => sub { Mojo::UserAgent->new },
 );
 
 my $params = Mojo::Parameters->new('command=listUsers&response=json');

@@ -1,6 +1,9 @@
 package Mojo::Cloudstack;
 
 use Mojo::Base -base;
+use Mojo::Parameters;
+use Mojo::URL;
+use Mojo::UserAgent;
 use Digest::HMAC_SHA1 qw(hmac_sha1 hmac_sha1_hex);
 use MIME::Base64;
 use URI::Encode 'uri_encode';
