@@ -52,7 +52,9 @@ sub AUTOLOAD {
 
   $self->_ua->get($req => sub {
     my ($ua, $tx) = @_;
-    $self->_ua->get($req)->res->json;
+    $params{response} eq 'xml'
+      ? $self->_ua->get($req)->res->body
+      : $self->_ua->get($req)->res->json;
   });
 }
 
