@@ -7,6 +7,7 @@ use Mojo::UserAgent;
 use Digest::HMAC_SHA1 qw(hmac_sha1 hmac_sha1_hex);
 use MIME::Base64;
 use URI::Encode 'uri_encode';
+use Data::Dumper 'Dumper';
 
 has 'host'        => "localhost";
 has 'path'        => "/client/api";
@@ -15,6 +16,7 @@ has 'scheme'      => "https";
 has 'api_key'     => "";
 has 'secret_key'  => "";
 has '_ua'         => sub {Mojo::UserAgent->new};
+has '_req'        => '';
 
 our $VERSION = '0.01';
 our $AUTOLOAD;
@@ -28,22 +30,18 @@ sub _build_request {
 
   my $req_params = Mojo::Parameters->new();
   foreach my $p (sort keys %$params) {
-    $req_params->param($p => $params->{ $p });
+    $req_params->param($p => uri_encode($params->{ $p }));
   }
   my $params_str = lc ($req_params->to_string);
-
-
   my $digest = hmac_sha1($params_str, $secret_key);
   my $base64_encoded = encode_base64($digest);
   chomp ($base64_encoded);
-  my $url_encoded = uri_encode($base64_encoded, 1);    # encode_reserved option is set to 1
 
-  $req_params->append(signature => $url_encoded);
-
+  my $uri_encoded = uri_encode($base64_encoded,1);
   my $url = Mojo::URL->new($baseurl);
   $url->query($req_params->to_string);
 
-  return $url->to_string;
+  return $url->to_string . '&signature='.$uri_encoded;
 
 }
 
@@ -51,8 +49,9 @@ sub AUTOLOAD {
   my $self = shift;
   (my $command = $AUTOLOAD) =~ s/.*:://;
   my %params = @_;
+  $params{command} = $command;
   my $req = $self->_build_request(\%params);
-
+  $self->_req($req);
   $self->_ua->get($req => sub {
     my ($ua, $tx) = @_;
     $params{response} eq 'xml'

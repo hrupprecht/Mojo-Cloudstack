@@ -50,7 +50,7 @@ my $cs = Mojo::Cloudstack->new(
 
 my $params = Mojo::Parameters->new('command=listUsers&response=json');
 $params->append(apiKey => $cs->api_key);
-is $cs->_build_request($params->to_hash), 'http://localhost:8080/client/api?apiKey=plgWJfZK4gyS3mOMTVmjUVg-X-jlWlnfaUJ9GAbBbf9EdM-kAYMmAiLqzzq1ElZLYq_u38zCm0bewzGUdP66mg&command=listUsers&response=json&signature=TTpdDq%252F7j%252FJ58XCRHomKoQXEQds%253D', 'built request';
+is $cs->_build_request($params->to_hash), 'http://localhost:8080/client/api?apiKey=plgWJfZK4gyS3mOMTVmjUVg-X-jlWlnfaUJ9GAbBbf9EdM-kAYMmAiLqzzq1ElZLYq_u38zCm0bewzGUdP66mg&command=listUsers&response=json&signature=TTpdDq%2F7j%2FJ58XCRHomKoQXEQds%3D', 'built request';
 
 my $r = $cs->listIpaddresses(
   zoneid => 4,
