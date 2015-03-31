@@ -4,6 +4,7 @@ use Mojo::Base -base;
 use Mojo::Parameters;
 use Mojo::URL;
 use Mojo::UserAgent;
+use Mojo::JSON 'j';
 use Digest::HMAC_SHA1 qw(hmac_sha1 hmac_sha1_hex);
 use MIME::Base64;
 use URI::Encode 'uri_encode';
@@ -17,6 +18,7 @@ has 'api_key'     => "";
 has 'secret_key'  => "";
 has '_ua'         => sub {Mojo::UserAgent->new};
 has '_req'        => '';
+has '_res'        => '';
 
 our $VERSION = '0.01';
 our $AUTOLOAD;
@@ -52,12 +54,14 @@ sub AUTOLOAD {
   $params{command} = $command;
   my $req = $self->_build_request(\%params);
   $self->_req($req);
-  $self->_ua->get($req => sub {
-    my ($ua, $tx) = @_;
-    $params{response} eq 'xml'
-      ? $self->_ua->get($req)->res->body
-      : $self->_ua->get($req)->res->json;
-  });
+  my $res = $self->_ua->get($req)->res->body;
+  $self->_res($res);
+  return j $res
+
+      #$self->_ua->get($req => sub {
+      #  my ($ua, $tx) = @_;
+      #  return  $tx->res->body;
+      #});
 }
 
 1;
