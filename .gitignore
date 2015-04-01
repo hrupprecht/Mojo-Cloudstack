@@ -1,2 +1,6 @@
 MANIFEST.SKIP.bak
 MANIFEST.bak
+Build
+_build/
+blib/
+ex/

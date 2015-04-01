@@ -58,18 +58,24 @@ sub AUTOLOAD {
   my $items = $self->get($req)->res->json;
   die "Could not get response for $req " . $self->status unless $items;
   my $responsetype = (keys %$items)[0];
-  if($responsetype =~ /^(list)(.*)(response)$/){
+  if($responsetype =~ /^(list|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
-    if($oname =~ /(s$)/){
-      $oname =~ s/$1//;
+    #warn Dumper $otype, $oname, $oresponse;
+    if($oname =~ /(s)$/){
+      $oname =~ s/$1$//;
     }
+    warn $oname;
     if($otype eq 'list'){
       return c(
         map { Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname),$_) } @{$items->{$responsetype}{$oname}}
       );
+    } elsif(exists $items->{$responsetype}{errorcode}){
+      return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::Error', $items->{$responsetype});
+    } else {
+      return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname), $items->{$responsetype}{$oname});
     }
   } else {
-    die "unknown response type $responsetype";
+    die "unknown response type $responsetype for reqest \n$req";
   }
 
       #$self->_ua->get($req => sub {
