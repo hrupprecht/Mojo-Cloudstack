@@ -1,10 +1,12 @@
 package Mojo::Cloudstack;
 
-use Mojo::Base -base;
+use Mojo::Base 'Mojo::UserAgent';
 use Mojo::Parameters;
 use Mojo::URL;
 use Mojo::UserAgent;
 use Mojo::JSON 'j';
+use Mojo::Collection 'c';
+use Mojo::Cloudstack::Base;
 use Digest::HMAC_SHA1 qw(hmac_sha1 hmac_sha1_hex);
 use MIME::Base64;
 use URI::Encode 'uri_encode';
@@ -16,7 +18,6 @@ has 'port'        => "8080";
 has 'scheme'      => "https";
 has 'api_key'     => "";
 has 'secret_key'  => "";
-has '_ua'         => sub {Mojo::UserAgent->new};
 has '_req'        => '';
 has '_res'        => '';
 
@@ -27,7 +28,7 @@ sub _build_request {
   my ($self, $params) = @_;
   my $baseurl = sprintf ("%s://%s:%s%s?", $self->scheme, $self->host, $self->port, $self->path);
   $params->{ apiKey }   = $self->api_key;
-  $params->{ response } //= 'json';
+  $params->{ response } = 'json';
   my $secret_key = $self->secret_key;
 
   my $req_params = Mojo::Parameters->new();
@@ -54,9 +55,22 @@ sub AUTOLOAD {
   $params{command} = $command;
   my $req = $self->_build_request(\%params);
   $self->_req($req);
-  my $res = $self->_ua->get($req)->res->body;
-  $self->_res($res);
-  return j $res
+  my $items = $self->get($req)->res->json;
+  die "Could not get response for $req " . $self->status unless $items;
+  my $responsetype = (keys %$items)[0];
+  if($responsetype =~ /^(list)(.*)(response)$/){
+    my ($otype, $oname, $oresponse) = ($1, $2, $3);
+    if($oname =~ /(s$)/){
+      $oname =~ s/$1//;
+    }
+    if($otype eq 'list'){
+      return c(
+        map { Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname),$_) } @{$items->{$responsetype}{$oname}}
+      );
+    }
+  } else {
+    die "unknown response type $responsetype";
+  }
 
       #$self->_ua->get($req => sub {
       #  my ($ua, $tx) = @_;
