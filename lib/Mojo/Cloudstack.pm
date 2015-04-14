@@ -55,8 +55,9 @@ sub AUTOLOAD {
   $params{command} = $command;
   my $req = $self->_build_request(\%params);
   $self->_req($req);
-  my $items = $self->get($req)->res->json;
-  die "Could not get response for $req " . $self->status unless $items;
+  my $res = $self->get($req)->res;
+  my $items = $res->json;
+  die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
   if($responsetype =~ /^(list|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
