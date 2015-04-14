@@ -10,13 +10,23 @@ my $secret_key = slurp("/home/holger/.mojo_cloudstack/secret_key");
 chomp $secret_key;
 
 my $cs = Mojo::Cloudstack->new(
-  host       => "172.29.0.12",
+  host       => "172.29.0.10",
   path       => "/client/api",
   port       => "443",
   scheme     => "https",
   api_key    => $api_key,
   secret_key => $secret_key,
 );
+#my $jobresult = 'f4679e80-17a0-44ef-ba5f-b77f90706e60';
+#my $res = $cs->queryAsyncJobResult(
+#  jobid => $jobresult
+#);
+#die Dumper $res;
+
+
+my $project_id = $cs->listProjects(
+  name => 'Blueprint-Customer'
+)->[0]->id;
 
 my $zones = $cs->listZones;
 my $zone1 = $zones->first;
@@ -34,9 +44,16 @@ my $t = $templates->first;
 warn Dumper $zone1, $so, $templates;
 warn Dumper $zone1->name, $so->name, $t->name ;
 
-my $vm = $cs->deployVirtualMachine(
+my $vmreq = $cs->deployVirtualMachine(
   serviceofferingid => $so->id,
   templateid => $t->id,
   zoneid => $zone1->id,
+  projectid => $project_id,
 );
-warn Dumper $vm;
+warn Dumper $vmreq;
+
+my $jobid = $vmreq->jobid;
+my $res = $cs->queryAsyncJobResult(
+  jobid => $jobid,
+);
+warn Dumper $res;
