@@ -17,7 +17,7 @@ my $cs = Mojo::Cloudstack->new(
   api_key    => $api_key,
   secret_key => $secret_key,
 );
-#my $jobresult = 'f4679e80-17a0-44ef-ba5f-b77f90706e60';
+#my $jobresult = 'd97fda4b-dafd-4459-b925-23cad7571c28';
 #my $res = $cs->queryAsyncJobResult(
 #  jobid => $jobresult
 #);
@@ -52,8 +52,12 @@ my $vmreq = $cs->deployVirtualMachine(
 );
 warn Dumper $vmreq;
 
-my $jobid = $vmreq->jobid;
+sleep 20;
+
+my $jobresult = $vmreq->jobid;
+warn "ID $jobresult";
 my $res = $cs->queryAsyncJobResult(
-  jobid => $jobid,
+  jobid => $jobresult
 );
+
 warn Dumper $res;
