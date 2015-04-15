@@ -82,10 +82,6 @@ sub AUTOLOAD {
     die "unknown response type $responsetype for reqest \n$req";
   }
 
-      #$self->_ua->get($req => sub {
-      #  my ($ua, $tx) = @_;
-      #  return  $tx->res->body;
-      #});
 }
 
 1;
