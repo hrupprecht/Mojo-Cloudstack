@@ -8,6 +8,7 @@ sub new {
   my $self = bless shift, $cs_class;
 
   no strict 'refs';
+  no warnings 'redefine';
   foreach my $key (keys %$self){
     *{"${cs_class}::${key}"} = sub {
       my ($self, $value) = @_;
