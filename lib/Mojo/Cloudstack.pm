@@ -57,7 +57,7 @@ sub AUTOLOAD {
   warn Dumper 'ITEMS', $items;
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
-  if($responsetype =~ /^(list|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach|query)(.*)(response)$/){
+  if($responsetype =~ /^(list|expunge|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach|query)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
     #warn Dumper $otype, $oname, $oresponse;
     if($oname =~ /(s)$/){
