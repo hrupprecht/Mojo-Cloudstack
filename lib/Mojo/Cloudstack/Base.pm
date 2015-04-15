@@ -1,6 +1,5 @@
 package Mojo::Cloudstack::Base;
 use Mojo::Base -base;
-use Mojo::Util 'monkey_patch';
 
 sub new {
   my $class = shift;
@@ -10,6 +9,8 @@ sub new {
   no strict 'refs';
   no warnings 'redefine';
   foreach my $key (keys %$self){
+    #TODO test $self->attr($key => sub { $self->{$key} });
+    #TODO disable no warnings 'redefine';
     *{"${cs_class}::${key}"} = sub {
       my ($self, $value) = @_;
       return $value ? (($self->{$key} = $value) and $self) : $self->{$key};
