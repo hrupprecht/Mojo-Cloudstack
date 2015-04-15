@@ -54,7 +54,7 @@ sub AUTOLOAD {
   my $req = $self->_build_request(\%params);
   my $res = $self->get($req)->res;
   my $items = $res->json;
-  warn Dumper 'ITEMS', $items;
+  #warn Dumper 'ITEMS', $items;
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
   if($responsetype =~ /^(list|expunge|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach|query)(.*)(response)$/){
@@ -68,13 +68,15 @@ sub AUTOLOAD {
         map { Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname),$_) } @{$items->{$responsetype}{$oname}}
       );
     } elsif($otype eq 'query'){
-      warn Dumper 'QUERY', $items->{$responsetype};
-      return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst((keys %{$items->{$responsetype}{jobresult}})[0] // 'AsyncJobNotFound') , $items->{$responsetype}{jobresult});
+      #warn Dumper 'QUERY', $items->{$responsetype};
+      return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::AsyncJobResult', $items->{$responsetype});
 
     } elsif(exists $items->{$responsetype}{errorcode}){
       return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::Error', $items->{$responsetype});
     } else {
-      return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname), $items->{$responsetype});
+      return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . (exists $items->{$responsetype}{jobid}
+        ? 'AsyncJobRequest'
+        : ucfirst($oname)), $items->{$responsetype});
     }
   } else {
     die "unknown response type $responsetype for reqest \n$req";

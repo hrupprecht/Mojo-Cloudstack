@@ -17,12 +17,6 @@ my $cs = Mojo::Cloudstack->new(
   api_key    => $api_key,
   secret_key => $secret_key,
 );
-#my $jobresult = 'd97fda4b-dafd-4459-b925-23cad7571c28';
-#my $res = $cs->queryAsyncJobResult(
-#  jobid => $jobresult
-#);
-#die Dumper $res;
-
 
 my $project_id = $cs->listProjects(
   name => 'Blueprint-Customer'
@@ -41,8 +35,8 @@ my $templates = $cs->listTemplates(
 my $t = $templates->first;
 
 
-warn Dumper $zone1, $so, $templates;
-warn Dumper $zone1->name, $so->name, $t->name ;
+#warn Dumper $zone1, $so, $templates;
+#warn Dumper $zone1->name, $so->name, $t->name ;
 
 my $vmreq = $cs->deployVirtualMachine(
   serviceofferingid => $so->id,
@@ -50,14 +44,28 @@ my $vmreq = $cs->deployVirtualMachine(
   zoneid => $zone1->id,
   projectid => $project_id,
 );
-warn Dumper $vmreq;
 
-sleep 20;
+#warn Dumper $vmreq;
 
 my $jobid = $vmreq->jobid;
-warn "ID $jobid";
-my $res = $cs->queryAsyncJobResult(
-  jobid => $jobid
-);
+warn "JOBID $jobid";
 
-warn Dumper $res;
+my $jobstatus = 0;
+my $res;
+$| = 1;
+
+while(not $jobstatus == 1){
+  $res = $cs->queryAsyncJobResult(
+    jobid => $jobid
+  );
+  $jobstatus = $res->jobstatus;
+  print '.';
+  sleep 1;
+}
+
+print "\n";
+print "vm_name  : " . $res->jobresult->name     . "\n";
+print "password : " . $res->jobresult->password . "\n";
+
+#warn Dumper $res;
+
