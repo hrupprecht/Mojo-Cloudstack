@@ -18,7 +18,7 @@ perldoc command.
 
 You can also look for information at:
 
-<code>
+<pre>
 
 AnnoCPAN, Annotated CPAN documentation
     http://annocpan.org/dist/Mojo-Cloudstack
@@ -29,7 +29,7 @@ CPAN Ratings
 Search CPAN
     http://search.cpan.org/dist/Mojo-Cloudstack/
 
-</code>
+</pre>
 
 LICENSE AND COPYRIGHT
 
