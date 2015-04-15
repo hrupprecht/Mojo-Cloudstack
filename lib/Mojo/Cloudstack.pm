@@ -18,8 +18,6 @@ has 'port'        => "8080";
 has 'scheme'      => "https";
 has 'api_key'     => "";
 has 'secret_key'  => "";
-has '_req'        => '';
-has '_res'        => '';
 
 our $VERSION = '0.01';
 our $AUTOLOAD;
@@ -54,14 +52,14 @@ sub AUTOLOAD {
   my %params = @_;
   $params{command} = $command;
   my $req = $self->_build_request(\%params);
-  $self->_req($req);
   my $res = $self->get($req)->res;
   my $items = $res->json;
+  warn Dumper 'ITEMS', $items;
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
   if($responsetype =~ /^(list|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach|query)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
-    warn Dumper $otype, $oname, $oresponse;
+    #warn Dumper $otype, $oname, $oresponse;
     if($oname =~ /(s)$/){
       $oname =~ s/$1$//;
     }
@@ -70,6 +68,7 @@ sub AUTOLOAD {
         map { Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname),$_) } @{$items->{$responsetype}{$oname}}
       );
     } elsif($otype eq 'query'){
+      warn Dumper 'QUERY', $items->{$responsetype};
       return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst((keys %{$items->{$responsetype}{jobresult}})[0] // 'AsyncJobNotFound') , $items->{$responsetype}{jobresult});
 
     } elsif(exists $items->{$responsetype}{errorcode}){
