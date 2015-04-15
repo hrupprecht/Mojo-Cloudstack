@@ -85,3 +85,72 @@ sub AUTOLOAD {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Mojo::Cloudstack
+
+=head1 DESCRIPTION
+
+Generic Class for Cloudstack API call
+
+
+=head1 SYNOPSIS
+
+  use Mojo::Cloudstack;
+
+=head1 METHODS
+
+=head2 new
+
+  my $cs = Mojo::Cloudstack->new(
+    host       => "cloustack.local",
+    path       => "/client/api",
+    port       => "443",
+    scheme     => "https",
+    api_key    => $api_key,
+    secret_key => $secret_key,
+  );
+
+  my $vmreq = $cs->deployVirtualMachine(
+    serviceofferingid => $so->id,
+    templateid => $t->id,
+    zoneid => $zone1->id,
+    projectid => $project_id,
+  );
+
+=head2 _build_request
+
+  my $params = Mojo::Parameters->new('command=listUsers&response=json');
+  $params->append(apiKey => $cs->api_key);
+  my $req = $cs->_build_request($params->to_hash)
+
+=head2 api_key
+
+API Key from Cloudstack
+
+=head2  host
+
+Host to connect to
+
+=head2 path
+
+URL path to API
+
+=head2 port
+
+Port to connect to
+
+=head2 scheme
+
+URL scheme http | https
+
+=head2 secret_key
+
+Secret Key from Cloudstack
+
+=cut
