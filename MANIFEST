@@ -1,13 +1,16 @@
 .perltidyrc
 Build.PL
 Changes
+ex/createvm.pl
+ex/delete_all_volumes_by_customer.pl
+ex/expunge_destroyed_vms.pl
 ignore.txt
 lib/Mojo/Cloudstack.pm
+lib/Mojo/Cloudstack/Base.pm
 MANIFEST			This list of files
 README
 t/00-load.t
 t/api_key
-t/manifest.t
 t/pod-coverage.t
 t/pod.t
 t/secret_key
