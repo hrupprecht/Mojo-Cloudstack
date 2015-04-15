@@ -1,6 +1,8 @@
 .perltidyrc
+.ship.conf
 Build.PL
 Changes
+cpanfile
 ex/createvm.pl
 ex/delete_all_volumes_by_customer.pl
 ex/expunge_destroyed_vms.pl
@@ -8,7 +10,8 @@ ignore.txt
 lib/Mojo/Cloudstack.pm
 lib/Mojo/Cloudstack/Base.pm
 MANIFEST			This list of files
-README
+README.md
+t/00-basic.t
 t/00-load.t
 t/api_key
 t/pod-coverage.t

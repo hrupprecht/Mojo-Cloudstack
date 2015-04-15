@@ -13,6 +13,7 @@ my $builder = Module::Build->new(
         'Module::Build' => 0,
     },
     build_requires => {
+        'Test::CPAN::Changes' => 0,
         'Test::More' => 0,
         'Test::Exception' => 0,
         'Test::MockObject' => 0,
