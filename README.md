@@ -18,15 +18,18 @@ perldoc command.
 
 You can also look for information at:
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Mojo-Cloudstack
+<code>
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Mojo-Cloudstack
+AnnoCPAN, Annotated CPAN documentation
+    http://annocpan.org/dist/Mojo-Cloudstack
 
-    Search CPAN
-        http://search.cpan.org/dist/Mojo-Cloudstack/
+CPAN Ratings
+    http://cpanratings.perl.org/d/Mojo-Cloudstack
 
+Search CPAN
+    http://search.cpan.org/dist/Mojo-Cloudstack/
+
+</code>
 
 LICENSE AND COPYRIGHT
 
