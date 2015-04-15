@@ -54,10 +54,10 @@ warn Dumper $vmreq;
 
 sleep 20;
 
-my $jobresult = $vmreq->jobid;
-warn "ID $jobresult";
+my $jobid = $vmreq->jobid;
+warn "ID $jobid";
 my $res = $cs->queryAsyncJobResult(
-  jobid => $jobresult
+  jobid => $jobid
 );
 
 warn Dumper $res;
