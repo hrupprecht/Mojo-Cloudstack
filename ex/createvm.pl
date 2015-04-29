@@ -46,6 +46,7 @@ my $vmreq = $cs->deployVirtualMachine(
 );
 
 #warn Dumper $vmreq;
+die $vmreq->errortext if $vmreq->can('errorcode');
 
 my $jobid = $vmreq->jobid;
 warn "JOBID $jobid";
@@ -54,7 +55,7 @@ my $jobstatus = 0;
 my $res;
 $| = 1;
 
-while(not $jobstatus == 1){
+while($jobstatus < 1){
   $res = $cs->queryAsyncJobResult(
     jobid => $jobid
   );
