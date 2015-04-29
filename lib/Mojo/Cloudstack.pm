@@ -7,6 +7,7 @@ use Mojo::UserAgent;
 use Mojo::JSON 'j';
 use Mojo::Collection 'c';
 use Mojo::Cloudstack::Base;
+use Mojo::Cloudstack::Api;
 use Digest::HMAC_SHA1 qw(hmac_sha1 hmac_sha1_hex);
 use MIME::Base64;
 use URI::Encode 'uri_encode';
@@ -46,6 +47,18 @@ sub _build_request {
 
 }
 
+sub __build_modules {
+  my ($self, @args) = @_;
+  my $apis = $self->listApis;
+  $apis->each(sub {
+    my ($e, $num) = @_;
+    say Dumper $num, $e;
+    #say Dumper $e->response;
+    say Dumper $e->__build_module_class;
+  });
+
+}
+
 sub AUTOLOAD {
   my $self = shift;
   (my $command = $AUTOLOAD) =~ s/.*:://;
@@ -57,6 +70,8 @@ sub AUTOLOAD {
   #warn Dumper 'ITEMS', $items;
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
+
+  $items->{$responsetype}{_cs} = $self;
   if($responsetype =~ /^(list|expunge|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach|query)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
     #warn Dumper $otype, $oname, $oresponse;
@@ -65,10 +80,13 @@ sub AUTOLOAD {
     }
     if($otype eq 'list'){
       return c(
-        map { Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname),$_) } @{$items->{$responsetype}{$oname}}
+        map {
+          $_->{_cs} = $self;
+          Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($oname),$_);
+        } @{$items->{$responsetype}{$oname}}
       );
     } elsif($otype eq 'query'){
-      #warn Dumper 'QUERY', $items->{$responsetype};
+      #warn Dumper 'QUERY', $responsetype, $items->{$responsetype};
       return  Mojo::Cloudstack::Base->new('Mojo::Cloudstack::AsyncJobResult', $items->{$responsetype});
 
     } elsif(exists $items->{$responsetype}{errorcode}){
