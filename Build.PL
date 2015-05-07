@@ -6,6 +6,7 @@ use Module::Build;
 my $builder = Module::Build->new(
   module_name        => 'Mojo::Cloudstack',
   license            => 'artistic_2',
+  dist_abstract      => 'API Request and class generator for Apache Cloudstack',
   dist_author        => q{Holger Rupprecht <holger.rupprecht@gmx.de>},
   dist_version_from  => 'lib/Mojo/Cloudstack.pm',
   release_status     => 'stable',

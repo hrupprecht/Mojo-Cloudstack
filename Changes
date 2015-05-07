@@ -3,3 +3,8 @@ Revision history for Mojo-Cloudstack
 0.01    2015-04-16
         Initial Release.
 
+0.02    2025-05-07
+        added dependencies to Build.pl
+        added api cache file
+        implements an api cache
+
