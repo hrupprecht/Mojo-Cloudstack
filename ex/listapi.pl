@@ -18,5 +18,6 @@ my $cs = Mojo::Cloudstack->new(
   secret_key => $secret_key,
 );
 
-my $api = $cs->__build_modules;
+my $api = $cs->listApis;
+print Dumper $api;
 
