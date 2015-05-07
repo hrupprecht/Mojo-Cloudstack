@@ -20,3 +20,5 @@ t/pod-coverage.t
 t/pod.t
 t/secret_key
 xt/boilerplate.t
+META.yml
+META.json
