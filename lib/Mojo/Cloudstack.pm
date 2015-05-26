@@ -148,7 +148,6 @@ sub __write_api_cache {
     print $cf j($apis);
     close $cf;
   }
-  #TODO sync api with cs version
   return $apis;
 
 }
@@ -193,6 +192,13 @@ step by step by 'real' classes when enhanced functionality is needed.
     zoneid => $zone1->id,
     projectid => $project_id,
   );
+
+=head2 sync
+
+Sync possible API calls against Cloudstack with your account
+dependend on your permisions.
+
+  $cs->sync;
 
 =head2 _build_request
 

@@ -40,7 +40,7 @@
    "provides" : {
       "Mojo::Cloudstack" : {
          "file" : "lib/Mojo/Cloudstack.pm",
-         "version" : "0.02"
+         "version" : "0.03"
       },
       "Mojo::Cloudstack::Api" : {
          "file" : "lib/Mojo/Cloudstack/Api.pm"
@@ -55,5 +55,5 @@
          "http://opensource.org/licenses/artistic-license-2.0.php"
       ]
    },
-   "version" : "0.02"
+   "version" : "0.03"
 }
