@@ -21,9 +21,14 @@ has 'port'        => "8080";
 has 'scheme'      => "https";
 has 'api_key'     => "";
 has 'secret_key'  => "";
-has 'api_cache'   => sub { shift->_load_api_cache };
+has 'responsetypes' => '';
+has 'api_cache'   => sub {
+  my $self = shift;
+  $self->_load_api_cache;
+  $self->__build_responsetypes;
+};
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our $AUTOLOAD;
 
 chomp(our $user = `whoami`);
@@ -57,9 +62,6 @@ sub AUTOLOAD {
   my $self = shift;
   (my $command = $AUTOLOAD) =~ s/.*:://;
   my %params = @_;
-  if($command eq 'listApis' and -f $cf){
-    return $self->api_cache;
-  }
   $params{command} = $command;
   my $req = $self->_build_request(\%params);
   my $res = $self->get($req)->res;
@@ -68,11 +70,11 @@ sub AUTOLOAD {
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
 
-  $items->{$responsetype}{_cs} = $self;
-  #TODO take responsetypes from cache
-  if($responsetype =~ /^(list|expunge|error|create|update|delete|stop|start|restart|deploy|assign|attach|detach|query)(.*)(response)$/){
+  my $responsetypesmap = $self->responsetypes;
+  #  if($responsetype =~ /^($responsetypesmap)(.*)(response)$/){
+  if($responsetype =~ /^(activate|add|archive|assign|associate|attach|authorize|change|configure|copy|create|delete|deploy|destroy|detach|disable|disassociate|enable|error|expunge|extract|get|list|lock|migrate|query|reboot|recover|register|remove|replace|reset|resize|restart|restore|revert|revoke|scale|start|stop|suspend|update|upload)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
-    #warn Dumper $otype, $oname, $oresponse;
+    $items->{$responsetype}{_cs} = $self unless $oname eq 'apis';
     if($oname eq 'apis'){
       $self->__write_api_cache($items);
       return $items;
@@ -103,20 +105,35 @@ sub AUTOLOAD {
 
 }
 
+sub sync {
+  return shift->_load_api_cache(1);
+}
+
 sub _load_api_cache {
   my ($self, $force) = @_;
-  $self->api_cache($self->__build_api_json)
+  $self->api_cache($self->__build_api_json($force))
     and return $self->api_cache
-      if $force;
+      if ($force or (not -f $cf));
   #TODO File::ShareDir
+
   $self->api_cache(j(slurp $cf)) if -f $cf;
   return $self->api_cache;
 }
 
+sub __build_responsetypes {
+  my ($self) = @_;
+  my $apis = $self->api_cache;
+  my %responsetypes = map { (split(/[A-Z]/,$_->{name},2))[0] => 1  }
+    @{ $apis->{listapisresponse}{api} };
+  $responsetypes{error} = 1;
+  $self->responsetypes(join('|', sort keys %responsetypes));
+  die $self->responsetypes;
+}
+
 sub __build_api_json {
-  my ($self, @args) = @_;
+  my ($self, $force) = @_;
   my $apis = $self->listApis;
-  $self->__write_api_cache($apis);
+  $self->__write_api_cache($apis, $force);
   return $apis;
 }
 
@@ -125,6 +142,7 @@ sub __write_api_cache {
   my $cachedir = File::HomeDir->users_home($user) . "/.cloudmojo";
   mkdir $cachedir unless -d $cachedir;
   my $cachefile = "$cachedir/api.json";
+  unlink $cachefile if $force;
   unless (-f $cachefile){
     open my $cf, ">$cachefile";
     print $cf j($apis);
