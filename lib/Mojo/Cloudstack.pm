@@ -28,7 +28,7 @@ has 'api_cache'   => sub {
   $self->__build_responsetypes;
 };
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 our $AUTOLOAD;
 
 chomp(our $user = `whoami`);
@@ -70,8 +70,6 @@ sub AUTOLOAD {
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
   my $responsetype = (keys %$items)[0];
 
-  my $responsetypesmap = $self->responsetypes;
-  #  if($responsetype =~ /^($responsetypesmap)(.*)(response)$/){
   if($responsetype =~ /^(activate|add|archive|assign|associate|attach|authorize|change|configure|copy|create|delete|deploy|destroy|detach|disable|disassociate|enable|error|expunge|extract|get|list|lock|migrate|query|reboot|recover|register|remove|replace|reset|resize|restart|restore|revert|revoke|scale|start|stop|suspend|update|upload)(.*)(response)$/){
     my ($otype, $oname, $oresponse) = ($1, $2, $3);
     $items->{$responsetype}{_cs} = $self unless $oname eq 'apis';
