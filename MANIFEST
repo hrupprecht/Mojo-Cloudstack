@@ -14,12 +14,9 @@ MANIFEST			This list of files
 META.json
 META.yml
 README.md
-t/00-basic.t
 t/00-load.t
 t/api_key
 t/change_resources.t
 t/pod-coverage.t
 t/pod.t
 t/secret_key
-xt/boilerplate.t
-Makefile.PL
