@@ -18,3 +18,5 @@ Revision history for Mojo-Cloudstack
 
 0.05    2015-05-30
         implements login/logout api calls
+        use import and attr from Mojo::Base'
+

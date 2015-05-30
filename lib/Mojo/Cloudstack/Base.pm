@@ -2,24 +2,29 @@ package Mojo::Cloudstack::Base;
 use Mojo::Base -base;
 
 sub new {
-  my $class = shift;
+  my $class    = shift;
   my $cs_class = shift;
+
   my $self = bless shift, $cs_class;
 
   no strict 'refs';
-  no warnings 'redefine';
-  foreach my $key (keys %$self){
-    #TODO test $self->attr($key => sub { $self->{$key} });
-    #TODO disable no warnings 'redefine';
-    *{"${cs_class}::${key}"} = sub {
-      my ($self, $value) = @_;
-      return $value ? (($self->{$key} = $value) and $self) : $self->{$key};
-    };
-    if($key eq 'jobresult'){
-      my $otype = (keys %{$self->{jobresult}})[0];
-      $self->$key(
-        Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst($otype), $self->{$key}{$otype})
-      );
+  *{ "${cs_class}::import" } = *{ "Mojo::Base::import" };
+  *{ "${cs_class}::attr" }   = *{ "Mojo::Base::attr" };
+  use strict 'refs';
+
+  $self->import('-base');
+
+  foreach my $key (keys %$self) {
+
+    $self->attr(
+      $key => sub {
+        my ($self, $value) = @_;
+        return $value ? (($self->{ $key } = $value) and $self) : $self->{ $key };
+      }
+    );
+    if ($key eq 'jobresult') {
+      my $otype = (keys %{ $self->{ jobresult } })[0];
+      $self->$key(Mojo::Cloudstack::Base->new('Mojo::Cloudstack::' . ucfirst ($otype), $self->{ $key }{ $otype }));
     }
   }
   return $self;
