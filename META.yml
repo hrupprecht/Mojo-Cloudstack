@@ -19,7 +19,7 @@ name: Mojo-Cloudstack
 provides:
   Mojo::Cloudstack:
     file: lib/Mojo/Cloudstack.pm
-    version: '0.04'
+    version: '0.05'
   Mojo::Cloudstack::Api:
     file: lib/Mojo/Cloudstack/Api.pm
   Mojo::Cloudstack::Base:
@@ -32,4 +32,4 @@ requires:
   URL::Encode: '0'
 resources:
   license: http://opensource.org/licenses/artistic-license-2.0.php
-version: '0.04'
+version: '0.05'
