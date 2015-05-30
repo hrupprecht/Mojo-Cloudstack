@@ -15,3 +15,6 @@ Revision history for Mojo-Cloudstack
 0.04    2015-05-26
         cleanups
         removed boilerplate stuff
+
+0.05    2015-05-30
+        implements login/logout api calls
