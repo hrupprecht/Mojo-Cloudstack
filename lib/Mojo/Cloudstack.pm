@@ -28,7 +28,7 @@ has 'api_cache'   => sub {
   $self->__build_responsetypes;
 };
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 our $AUTOLOAD;
 
 chomp(our $user = `whoami`);
@@ -64,7 +64,7 @@ sub AUTOLOAD {
   my %params = @_;
   $params{command} = $command;
   my $req = $self->_build_request(\%params);
-  my $res = $self->get($req)->res;
+  my $res = $self->post($req)->res;
   my $items = $res->json;
   #warn Dumper 'ITEMS', $items;
   die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
