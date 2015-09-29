@@ -28,7 +28,7 @@ has 'api_cache'   => sub {
   $self->__build_responsetypes;
 };
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 our $AUTOLOAD;
 
 chomp(our $user = `whoami`);
@@ -67,7 +67,7 @@ sub AUTOLOAD {
   my $res = $self->post($req)->res;
   my $items = $res->json;
   #warn Dumper 'ITEMS', $items;
-  die sprintf("Could not get response for %s %s %s", $req,  $res->code, $res->message) unless $items;
+  die sprintf("Could not get response for %s\n%s", $req,  Dumper($res)) unless $items;
   my $responsetype = (keys %$items)[0];
 
   if($responsetype =~ /^(login|activate|add|archive|assign|associate|attach|authorize|change|configure|copy|create|delete|deploy|destroy|detach|disable|disassociate|enable|error|expunge|extract|get|list|lock|migrate|query|reboot|recover|register|remove|replace|reset|resize|restart|restore|revert|revoke|scale|start|stop|suspend|update|upload)(.*)(response)$/){
