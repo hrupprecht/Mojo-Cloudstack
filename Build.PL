@@ -25,6 +25,7 @@ my $builder = Module::Build->new(
     'Digest::HMAC_SHA1' => '1.03',
     'URI::Encode'       => 0,
     'File::HomeDir'     => 0,
+    'IO::Socket::SSL'   => '2.020',
   },
   add_to_cleanup     => ['Mojo-Cloudstack-*'],
   create_makefile_pl => 'traditional',
