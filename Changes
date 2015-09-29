@@ -23,3 +23,7 @@ Revision history for Mojo-Cloudstack
 0.06    2015-09-28
         use post request due to CLOUDSTACK-8505 and commit 1c81b241e7914b24b06c3b7b3ee98bc0d3b4f68b only POST methods
         are allowed.
+
+0.07    2015-09-298
+        dump on error
+        added dep for IO::Socket::SSL

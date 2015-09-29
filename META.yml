@@ -10,7 +10,7 @@ build_requires:
 configure_requires:
   Module::Build: '0'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4214, CPAN::Meta::Converter version 2.150001'
+generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.150005'
 license: artistic_2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,7 +19,7 @@ name: Mojo-Cloudstack
 provides:
   Mojo::Cloudstack:
     file: lib/Mojo/Cloudstack.pm
-    version: '0.06'
+    version: '0.07'
   Mojo::Cloudstack::Api:
     file: lib/Mojo/Cloudstack/Api.pm
   Mojo::Cloudstack::Base:
@@ -27,9 +27,11 @@ provides:
 requires:
   Digest::HMAC_SHA1: '1.03'
   File::HomeDir: '0'
+  IO::Socket::SSL: '2.020'
   Mojolicious: '0'
   URI::Encode: '0'
   URL::Encode: '0'
 resources:
   license: http://opensource.org/licenses/artistic-license-2.0.php
-version: '0.06'
+version: '0.07'
+x_serialization_backend: 'CPAN::Meta::YAML version 0.016'
